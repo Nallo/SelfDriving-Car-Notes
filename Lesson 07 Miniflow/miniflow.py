@@ -62,6 +62,23 @@ class Add(Neuron):
             if n.value:
                 self.value += n.value
 
+class Mul(Neuron):
+    def __init__(self, x, y):
+        # You could access `x` and `y` in forward with
+        # self.inbound_neurons[0] (`x`) and self.inbound_neurons[1] (`y`)
+        Neuron.__init__(self, [x, y])
+
+    def forward(self):
+        """
+        Set the value of this neuron (`self.value`) to the sum of it's inbound_nodes.
+
+        Your code here!
+        """
+        self.value = 1
+        for n in self.inbound_neurons:
+            if n.value:
+                self.value *= n.value
+
 
 """
 No need to change anything below here!

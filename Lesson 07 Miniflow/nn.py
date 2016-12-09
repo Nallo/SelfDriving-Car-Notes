@@ -16,6 +16,7 @@ x, y = Input(), Input()
 
 # Define an `Add` neuron, the two above`Input` neurons being the input.
 f = Add(x, y)
+# f = Mul(x, y)
 
 # The value of `x` and `y` will be set to 10 and 20 respectively.
 feed_dict = {x: 10, y: 5}
