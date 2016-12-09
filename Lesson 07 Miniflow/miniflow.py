@@ -79,6 +79,35 @@ class Mul(Neuron):
             if n.value:
                 self.value *= n.value
 
+class Linear(Neuron):
+    def __init__(self, inputs, weights, bias):
+        Neuron.__init__(self, inputs)
+
+        # NOTE: The weights and bias properties here are not
+        # numbers, but rather references to other neurons.
+        # The weight and bias values are stored within the
+        # respective neurons.
+        self.weights = weights
+        self.bias = bias
+
+    def forward(self):
+        """
+        Set self.value to the value of the linear function output which is:
+        output = bias + sum(x_i * w_i).
+
+        Your code goes here!
+        """
+        x_list = [n.value for n in self.inbound_neurons]
+        w_list = [n.value for n in self.weights]
+        print(x_list)
+        print(w_list)
+        print(self.bias.value)
+
+        self.value = self.bias.value
+        for (xx, ww) in zip(x_list, w_list):
+            self.value += xx * ww
+
+
 
 """
 No need to change anything below here!
