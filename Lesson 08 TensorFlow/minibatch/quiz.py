@@ -3,7 +3,7 @@ import tensorflow as tf
 import numpy as np
 from helper import batches
 
-learning_rate = 0.001
+learning_rate = 0.0001
 n_input = 784  # MNIST data input (img shape: 28*28)
 n_classes = 10  # MNIST total classes (0-9 digits)
 
@@ -36,23 +36,46 @@ optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minim
 correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(labels, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+def print_epoch_stats(epoch_i, sess, last_features, last_labels):
+    """
+    Print cost and validation accuracy of an epoch
+    """
+    current_cost = sess.run(
+        cost,
+        feed_dict={features: last_features, labels: last_labels})
+    valid_accuracy = sess.run(
+        accuracy,
+        feed_dict={features: test_features, labels: test_labels})
+    print('Epoch: {:<4} - Cost: {:<8.3} Valid Accuracy: {:<5.3}'.format(
+        epoch_i,
+        current_cost,
+        valid_accuracy))
 
-# TODO: Set batch size
+epochs = 100
 batch_size = 128
+
+assert epochs is not None, 'You must set the epochs number'
 assert batch_size is not None, 'You must set the batch size'
 
 init = tf.initialize_all_variables()
 
+train_batches = batches(batch_size, train_features, train_labels)
 with tf.Session() as sess:
     sess.run(init)
 
-    # TODO: Train optimizer on all batches
-    for batch_features, batch_labels in batches(batch_size, train_features, train_labels):
-        sess.run(optimizer, feed_dict={features: batch_features, labels: batch_labels})
+    # Training cycle
+    for epoch_i in range(epochs):
 
-    # Calculate accuracy for test dataset
-    test_accuracy = sess.run(
-        accuracy,
-        feed_dict={features: test_features, labels: test_labels})
+        # Loop over all batches
+        for batch_features, batch_labels in train_batches:
+            sess.run(optimizer, feed_dict={features: batch_features, labels: batch_labels})
+
+        # Print cost and validation accuracy of an epoch
+        print_epoch_stats(epoch_i, sess, batch_features, batch_labels)
+
+        # Calculate accuracy for test dataset
+        test_accuracy = sess.run(
+            accuracy,
+            feed_dict={features: test_features, labels: test_labels})
 
 print('Test Accuracy: {}'.format(test_accuracy))
