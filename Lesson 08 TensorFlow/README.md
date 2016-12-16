@@ -35,6 +35,8 @@ A TensorFlow's session is an environment for running such graph. The Session
 manages all the operations that run on GPU(s) and/or CPU(s).
 
 ```python
+msg = tf.constant("hello world")
+
 with tf.Session() as s:
     output = s.run(msg)
 ```
