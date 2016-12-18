@@ -1,5 +1,8 @@
 *.DS_Store
 *.gz
+*.ipynb_checkpoints
+*.pdf
+*.pickle
 *.pyc
 *.zip
 *__pycache__
