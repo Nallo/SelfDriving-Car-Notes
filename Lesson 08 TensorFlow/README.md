@@ -184,3 +184,139 @@ distribution with zero-mean and equal variance.
 
 When it comes to weights and bias we want to choose them from Normal
 distribution with zero-mean and small sigma.
+
+## From Linear to Non-Linear models
+
+Linear models are working great but what if we want to train a model that is a
+Non-Linear function?
+
+The idea is simple: **take a linear model** and stick into it a hidden layer
+with `H` ReLUs (Rectified linear unit) functions.
+
+The ReLUs function is a special type of activation function defined as
+`f(x) = max(0, x)`. In other words the ReLU is `0` if x is negative, and `y = x`
+otherwise. TensorFlow provides the ReLU function as `tf.nn.relu()`.
+
+![](img/relu.png)
+
+```python
+# Solution is available in the other "solution.py" tab
+import tensorflow as tf
+
+output = None
+hidden_layer_weights = [
+    [0.1, 0.2, 0.4],
+    [0.4, 0.6, 0.6],
+    [0.5, 0.9, 0.1],
+    [0.8, 0.2, 0.8]]
+out_weights = [
+    [0.1, 0.6],
+    [0.2, 0.1],
+    [0.7, 0.9]]
+
+# Weights and biases
+weights = [
+    tf.Variable(hidden_layer_weights),
+    tf.Variable(out_weights)]
+biases = [
+    tf.Variable(tf.zeros(3)),
+    tf.Variable(tf.zeros(2))]
+
+# Input
+features = tf.Variable([
+    [1.0, 2.0, 3.0, 4.0],
+    [-1.0, -2.0, -3.0, -4.0],
+    [11.0, 12.0, 13.0, 14.0]
+])
+
+# Create Model Y = ReLU(X * W_1 + b_1) * W_2 + b_2
+# where ReLU(X * W_1 + b_1) is the hidden layer.
+hidden_layer = tf.add(tf.matmul(features, weights[0]), biases[0])
+hidden_layer = tf.nn.relu(hidden_layer)
+logits = tf.add(tf.matmul(hidden_layer, weights[1]), biases[1])
+
+# Print results
+with tf.Session() as sess:
+    sess.run(tf.initialize_all_variables())
+    print(sess.run(logits))
+```
+
+The code above represents a 2-layers Neural Network.
+
+We can go deeper with Neural Networks by increasing the number of hidden layers
+by adding more ReLUs blocks.
+
+**Hint:** typically, Neural Networks perform better when they are **deeper** rather
+than when they are wide. Wider neural networks requires more computational power
+and they do not provide results as good as deeper nets.
+
+![](img/wider_deeper.png)
+
+## Saving and Restoring models
+
+The `tf.train.Saver` class provides useful method to save and restore `tf.Variable`
+objects to the file system.
+
+### Saving Variables
+
+```python
+import tensorflow as tf
+
+# The file path to save the data
+save_file = 'model.ckpt'
+
+# Two Tensor Variables: weights and bias
+weights = tf.Variable(tf.truncated_normal([2, 3]))
+bias = tf.Variable(tf.truncated_normal([3]))
+
+# Class used to save and/or restore Tensor Variables
+saver = tf.train.Saver()
+
+with tf.Session() as sess:
+    # Initialize all the Variables
+    sess.run(tf.initialize_all_variables())
+
+    # Show the values of weights and bias
+    print('Weights:')
+    print(sess.run(weights))
+    print('Bias:')
+    print(sess.run(bias))
+
+    # Save the model
+    saver.save(sess, save_file)
+```
+
+The line `saver = tf.train.Saver()` creates an instance of the `Saver` class,
+later, the line `saver.save(sess, save_file)` saves the model.
+
+In this particular scenario we just saved two variables but we can save an entire
+model.
+
+### Loading Variables
+
+```python
+# Remove the previous weights and bias
+tf.reset_default_graph()
+
+# Two Variables: weights and bias
+weights = tf.Variable(tf.truncated_normal([2, 3]))
+bias = tf.Variable(tf.truncated_normal([3]))
+
+# Class used to save and/or restore Tensor Variables
+saver = tf.train.Saver()
+
+with tf.Session() as sess:
+    # Load the weights and bias
+    saver.restore(sess, save_file)
+
+    # Show the values of weights and bias
+    print('Weight:')
+    print(sess.run(weights))
+    print('Bias:')
+    print(sess.run(bias))
+```
+
+On the other hand, it is very easy to load saved `tf.Variable` objects.
+Firstly, clear your graph with `tf.reset_default_graph()`, secondly, create an
+instance of the `Saver` object and finally, load the variables from the file
+system with `saver.restore(sess, save_file)`.
