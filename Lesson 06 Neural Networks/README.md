@@ -84,11 +84,11 @@ using another function similar to it. The new function is the Sigmoid.
 
 `Sigmoid(a) = 1 / (1 + exp(-a))`
 
-fig(sigmoid)
+![](img/sigmoid.png)
 
 The derivate of the Sigmoid function is just `Sig(x) * (1 - Sig(x))`.
 
-fig(proof derivate sigmoid)
+![](img/sigmoid_derivative.png)
 
 ### Gradient Descent Rule (unthresholded)
 
