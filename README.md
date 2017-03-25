@@ -7,6 +7,7 @@ In particular the following arguments are covered:
   * Computer vision
   * [Deep Learning](Lesson\ 08\ TensorFlow)
   * [Neural Network](Lesson\ 06\ Neural\ Networks)
+  * [Kalman Filter](kalman_filter)
 
 ## Contacts
 
