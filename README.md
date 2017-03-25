@@ -5,9 +5,9 @@ Self Driving car technology.
 In particular the following arguments are covered:
 
   * Computer vision
-  * [Deep Learning](Lesson 08 TensorFlow)
-  * [Neural Network](Lesson 06 Neural Networks)
+  * [Deep Learning](Lesson\ 08\ TensorFlow)
+  * [Neural Network](Lesson\ 06\ Neural\ Networks)
 
 ## Contacts
 
-Feel free to reach me out at [s.martinallo@gmail.com](mailto: s.martinallo@gmail.com).
+Feel free to reach me out at [s.martinallo@gmail.com](mailto:\ s.martinallo@gmail.com).
