@@ -61,3 +61,27 @@ In this phase, two mathematical concepts are taken into account:
 
   * Convolution
   * The [Total Probability](https://en.wikipedia.org/wiki/Law_of_total_probability)
+
+
+When it comes to the motion update, the math is really straight forward.
+Lets assume we are in position **x** with a Distribution probability with mean
+**u1** and variance **s1**. We move in one direction with a Distribution probability
+with mean **u_mov** and variance **s_mov** the new motion update will be a Gaussian
+with:
+
+  * `u = u1 + u_mov`
+  * `s = s1 + s_mov`
+
+  In python this math is coded as follows:
+
+  ```python
+
+  def predict(mean1, var1, mean2, var2):
+      """ Given the mean and variance of two different Gaussian Distributions,
+          predict your new mean and variance given the mean and variance of your
+          prior belief and the mean and variance of your motion.
+      """
+      new_mean = mean1 + mean2
+      new_var = var1 + var2
+      return [new_mean, new_var]
+  ```
