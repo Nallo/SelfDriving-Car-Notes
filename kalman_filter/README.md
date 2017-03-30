@@ -29,6 +29,32 @@ In this phase, two mathematical concepts are taken into account:
   * The product of the measurements
   * The [Bayes Rule](https://en.wikipedia.org/wiki/Bayes%27_rule)
 
+Let assume we have:
+
+  * a **prior probability** which is a Normal Distribution with mean **u1** and
+    variance **s1**;
+  * a **measurement probability** which is a Normal Distribution with mean **u2**
+    and variance **s2**;
+
+We want to compute the **posterior probability** as result of the **measurement
+update**. The new Normal Distribution will be a Gaussian with
+
+  * `u = (u1*s2 + u2*s1)/(s1 + s2)`
+  * `s = 1 / [(1/s1) + (1/s2)]`
+
+In python this math is coded as follows:
+
+```python
+
+def update(mean1, var1, mean2, var2):
+    """ Given the mean and variance of two different Gaussian Distributions,
+        it computes the mean and variance of the new Gaussian of the measurement.
+    """
+    new_mean = (mean1*var2 + mean2*var1) / (var1 + var2)
+    new_var = 1 / (1/var1 + 1/var2)
+    return [new_mean, new_var]
+```
+
 ### 2. Motion Update
 
 In this phase, two mathematical concepts are taken into account:
