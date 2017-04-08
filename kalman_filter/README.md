@@ -150,3 +150,31 @@ I = matrix([[1., 0.], [0., 1.]])       # identity matrix
 
 print kalman_filter(x, P)
 ```
+
+# Kalman Filter Algorithm Map
+
+![kalman filter algo map](imgs/kalman-map.png)
+
+The Kalman Filter will receive data from two different sensors:
+
+  * Lidar
+  * Radar
+
+**First measurement** - the filter will receive initial measurements of the object's
+position relative to the car. These measurements will come from a radar or lidar sensor.
+
+**Initialize state and covariance matrices** - the filter will initialize the object's
+position based on the first measurement.
+
+Another sensor measurement will come after a time period Δt.
+
+**Predict** - the algorithm will predict where the object will be after time Δt.
+One basic way to predict the object location after Δt is to assume the object's
+velocity is constant; thus the object will have moved velocity * Δt.
+
+**Update** - the filter compares the "predicted" location with what the sensor
+measurement says. The predicted location and the measured location are combined to give
+an updated location.
+
+The car will receive another sensor measurement after a time period Δt. The algorithm
+then does another predict and update step.
