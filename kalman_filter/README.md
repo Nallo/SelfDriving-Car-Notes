@@ -157,8 +157,8 @@ print kalman_filter(x, P)
 
 The Kalman Filter will receive data from two different sensors:
 
-  * Lidar
-  * Radar
+  * Lidar (cartesian coordinate system)
+  * Radar (polar coordinate system)
 
 **First measurement** - the filter will receive initial measurements of the object's
 position relative to the car. These measurements will come from a radar or lidar sensor.
@@ -178,3 +178,13 @@ an updated location.
 
 The car will receive another sensor measurement after a time period Δt. The algorithm
 then does another predict and update step.
+
+### Question
+
+*What should a Kalman Filter do if both the radar and laser measurements arrive
+at the same time, k+t? Hint: The Kalman filter algorithm predicts -> updates ->
+predicts -> updates, etc. If two sensor measurements come in simultaneously, the
+time step between the first measurement and the second measurement would be zero.*
+
+Predict the state to k+3 then use either one of the sensors to update. Then predict
+the state to k+3 again and update with the other sensor measurement.
