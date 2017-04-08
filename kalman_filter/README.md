@@ -221,5 +221,5 @@ at the same time, k+t? Hint: The Kalman filter algorithm predicts -> updates ->
 predicts -> updates, etc. If two sensor measurements come in simultaneously, the
 time step between the first measurement and the second measurement would be zero.*
 
-Predict the state to k+3 then use either one of the sensors to update. Then predict
-the state to k+3 again and update with the other sensor measurement.
+Predict the state to k+t then use either one of the sensors to update. Then predict
+the state to k+t again and update with the other sensor measurement.
