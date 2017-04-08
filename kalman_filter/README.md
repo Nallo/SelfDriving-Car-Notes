@@ -155,9 +155,11 @@ def kalman_filter(x, P):
 
         # measurement update
         Z = matrix([[measurements[n]]])
-        y = Z - H * x
+        y = Z - H * x   # error calculation
         S = H * P * H.transpose() + R
-        K = P * H.transpose() * S.inverse()
+        K = P * H.transpose() * S.inverse() # kalman gain
+
+        # New state
         x = x + K * y
         P = (I - K*H) * P
 
