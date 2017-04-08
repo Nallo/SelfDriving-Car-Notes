@@ -22,7 +22,24 @@ using a high-performance programming language such as: C++.
 The Kalman Filter represents our distributions by guassians and iterates on two
 main cycles.
 
-### 1. Measurement Update
+### 1. Measurement Update (Prediction)
+
+Let's say we know an object's current position and velocity , which we keep in
+the *x* variable. Now one second has passed. We can predict where the object will
+be one second later because we knew the object position and velocity one second
+ago; we'll just assume the object kept going at the same velocity.
+
+The equation (11) does these prediction calculations for us.
+
+But maybe the object didn't maintain the exact same velocity. Maybe the object
+changed direction, accelerated or decelerated. So when we predict the position
+one second later, our uncertainty increases. Equation (12) represents this increase
+in uncertainty.
+
+Process noise refers to the uncertainty in the prediction step. We assume the
+object travels at a constant velocity, but in reality, the object might accelerate
+or decelerate. The notation *ν ∼ N(0,Q)* defines the process noise as a gaussian
+distribution with mean zero and covariance Q.
 
 In this phase, two mathematical concepts are taken into account:
 
@@ -56,6 +73,22 @@ def update(mean1, var1, mean2, var2):
 ```
 
 ### 2. Motion Update
+
+Now we get some sensor information that tells where the object is relative to the
+car. First we compare where we think we are with what the sensor data tells us:
+Equation (13).
+
+The *K* matrix, often called the **Kalman filter gain**, combines the uncertainty
+of where we think we are *P'* with the uncertainty of our sensor measurement *R*.
+If our sensor measurements are very uncertain (*R* is high relative to *P'*),
+then the Kalman filter will give more weight to where we think we are: *x'*.
+If where we think we are is uncertain (*P'* is high relative to *R*), the Kalman
+filter will put more weight on the sensor measurement: *z*.
+
+Measurement noise refers to uncertainty in sensor measurements. The notation
+*ω ∼ N(0,R)* defines the measurement noise as a gaussian distribution with mean
+zero and covariance *R*. Measurement noise comes from uncertainty in sensor
+measurements.
 
 In this phase, two mathematical concepts are taken into account:
 
