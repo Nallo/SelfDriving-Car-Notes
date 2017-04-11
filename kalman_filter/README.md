@@ -316,7 +316,9 @@ void Tracking::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
 ![kalman non linear](imgs/kalman-non-linear.png)
 
-However, we can approximate the non-linear using the *Taylor series expansion* of
-the *arctan(x)*. By doing so, the input data maintain its "Gaussian-ness".
+However, we can approximate the non-linear model using the *Taylor series expansion*
+of the *arctan(x)*. By doing so, the input data maintain its "Gaussian-ness".
 
 ![kalman linear approx](imgs/kalman-linear-app.png)
+
+In particular, the function *y=arctan(x)* can be approximate to *y=x* when *x->0*.
