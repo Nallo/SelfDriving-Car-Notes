@@ -224,10 +224,10 @@ time step between the first measurement and the second measurement would be zero
 Predict the state to k+t then use either one of the sensors to update. Then predict
 the state to k+t again and update with the other sensor measurement.
 
-# Lidar measurement
+# Lidar measurement (position)
 
   * **z** is the measurement vector. For a lidar sensor, the z vector contains the
-    position−x and position−y measurements.
+    *position−x* and *position−y* measurements.
   * **H** is the matrix that projects your belief about the object's current state
     into the measurement space of the sensor. For lidar, this is a fancy way of
     saying that we discard velocity information from the state variable since the
@@ -298,3 +298,25 @@ void Tracking::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     std::cout << "P_= " << kf_.P_ << std::endl;
 }
 ```
+
+# Radar measurement (radial velocity)
+
+  * **z** is the measurement vector. For a radar sensor, the z vector contains the
+    *range*, the *bearing* and the *radial velocity* measurements.
+    * **range - ρ** is the radial distance from the origin.
+    * **bearing - φ** is the angle between ρ and x.
+    * **radial velocity - ρ_dot** is the change of ρ.
+  * **H** is the matrix that projects your belief about the object's current state
+    into the measurement space of the sensor. For radar, this is a non-linear model.
+    The state vector x contains information about *[p​x, p​y, v​x, v​y]* whereas the
+    z vector will only contain *[range, bearing, radial position]*.
+    Multiplying Hx allows us to compare x, our belief, with z, the sensor measurement.
+  * Given that the radar model is non-linear, applying a nonlinear function to a
+    Gaussian distribution removes its "Gaussian-ness".
+
+![kalman non linear](imgs/kalman-non-linear.png)
+
+However, we can approximate the non-linear using the *Taylor series expansion* of
+the *arctan(x)*. By doing so, the input data maintain its "Gaussian-ness".
+
+![kalman linear approx](imgs/kalman-linear-app.png)
