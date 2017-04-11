@@ -223,3 +223,82 @@ time step between the first measurement and the second measurement would be zero
 
 Predict the state to k+t then use either one of the sensors to update. Then predict
 the state to k+t again and update with the other sensor measurement.
+
+# Lidar measurement
+
+  * **z** is the measurement vector. For a lidar sensor, the z vector contains the
+    position−x and position−y measurements.
+  * **H** is the matrix that projects your belief about the object's current state
+    into the measurement space of the sensor. For lidar, this is a fancy way of
+    saying that we discard velocity information from the state variable since the
+    lidar sensor only measures position: The state vector x contains information
+    about *[p​x, p​y, v​x, v​y]* whereas the z vector will only contain *[px, py]*.
+    Multiplying Hx allows us to compare x, our belief, with z, the sensor measurement.
+  * What does the prime notation in the x vector represent? The prime notation
+    like *p​x'* means you have already done the update step but have not done the
+    measurement step yet. In other words, the object was at px. After time Δt,
+    you calculate where you believe the object will be based on the motion model
+    and get px'.
+
+```c++
+
+// Process a single measurement
+void Tracking::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
+	if (!is_initialized_) {
+		//cout << "Kalman Filter Initialization " << endl;
+
+		//set the state with the initial location and zero velocity
+		kf_.x_ << measurement_pack.raw_measurements_[0],
+                    measurement_pack.raw_measurements_[1],
+                    0,
+                    0;
+
+		previous_timestamp_ = measurement_pack.timestamp_;
+		is_initialized_ = true;
+		return;
+	}
+
+	// compute the time elapsed between the current and previous measurements
+    // dt - expressed in seconds
+	float dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;
+	previous_timestamp_ = measurement_pack.timestamp_;
+
+	//1. Modify the F matrix so that the time is integrated (equation 21)
+	kf_.F_(0,2) = dt;
+	kf_.F_(1,3) = dt;
+
+    // precompute some constants
+	float dt2 = pow(dt, 2);
+	float dt4_4 = pow(dt, 4)/4;
+	float dt3_2 = pow(dt, 3)/2;
+
+	float q00 = noise_ax * dt4_4;
+	float q02 = noise_ax * dt3_2;
+
+	float q11 = noise_ay * dt4_4;
+	float q13 = noise_ay * dt3_2;
+
+	float q20 = noise_ax * dt3_2;
+	float q22 = noise_ax * dt2;
+
+    float q31 = noise_ay * dt3_2;
+	float q33 = noise_ay * dt2;
+
+    //2. Set the process covariance matrix Q (equation 40)
+	kf_.Q_ = MatrixXd(4, 4);
+	kf_.Q_ << q00, 0, q02, 0,
+			  0, q11, 0, q13,
+			  q20, 0, q22, 0,
+			  0, q31, 0, q33;
+
+	//3. Call the Kalman Filter predict() function
+	kf_.Predict();
+
+	//4. Call the Kalman Filter update() function
+	// with the most recent raw measurements_
+	kf_.Update(measurement_pack.raw_measurements_);
+
+	std::cout << "x_= " << kf_.x_ << std::endl;
+	std::cout << "P_= " << kf_.P_ << std::endl;
+}
+```
