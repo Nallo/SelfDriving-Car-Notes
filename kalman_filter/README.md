@@ -322,3 +322,46 @@ of the *arctan(x)*. By doing so, the input data maintain its "Gaussian-ness".
 ![kalman linear approx](imgs/kalman-linear-app.png)
 
 In particular, the function *y=arctan(x)* can be approximate to *y=x* when *x->0*.
+
+# Jacobian Matrix
+
+Thanks to the linearization of the *arctan(x)* we can compute the **Jacobian**
+matrix that will be used to linearize the radar measurements.
+
+```c++
+MatrixXd CalculateJacobian(const VectorXd& x_state) {
+
+	MatrixXd Hj(3,4);
+	//recover state parameters
+	float px = x_state(0);
+	float py = x_state(1);
+	float vx = x_state(2);
+	float vy = x_state(3);
+
+	//check division by zero
+	float px2_py2 = px*px + py*py;
+	float sqrt_px2_py2 = sqrt(px2_py2);
+	float px2_py2_3_2 = pow(px2_py2, 1.5);
+
+    if (px2_py2 == 0) {
+        cout << __func__ << ": Error division by zero.\n";
+        return Hj;
+    }
+
+    float h_00 = px / sqrt_px2_py2;
+    float h_01 = py / sqrt_px2_py2;
+    float h_10 = - py / px2_py2;
+    float h_11 = px / px2_py2;
+    float h_20 = py * (vx*py - vy*px) / px2_py2_3_2;
+    float h_21 = px * (vy*px - vx*py) / px2_py2_3_2;
+    float h_22 = h_00;
+    float h_23 = h_01;
+
+	//compute the Jacobian matrix
+	Hj << h_00, h_01, 0.0, 0.0,
+	    h_10, h_11, 0.0, 0.0,
+	    h_20, h_21, h_22, h_23;
+
+	return Hj;
+}
+```
