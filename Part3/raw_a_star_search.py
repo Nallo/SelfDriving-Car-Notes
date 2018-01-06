@@ -1,36 +1,3 @@
-# Path Planning
-
-## Prediction
-
-Estimates other vehicles behavior.
-
-## Behavior
-
-Estimates what maneuver to do, taking into account the prediction estimation.
-
-## Trajectory
-
-Select the path the car has to do based on behavior.
-
-# Discrete Motion Planning
-
-Given the following inputs:
-
-  * A discretized map.
-  * A starting location.
-  * A goal location.
-  * A cost, typically in terms of gas or path length.
-
-The vehicle needs to find the **minimum cost path**.
-
-According to the costs assigned to each possible state / choice the path can be
-very different.
-
-The Path Planning problem can be seen as a graph search problem.
-
-## A first implementation of the A* Search
-
-```python
 # ----------
 # User Instructions:
 #
@@ -104,4 +71,3 @@ def search(grid,init,goal,cost):
     return
 
 search(grid, init, goal, cost)
-```
