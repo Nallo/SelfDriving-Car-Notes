@@ -105,3 +105,12 @@ def search(grid,init,goal,cost):
 
 search(grid, init, goal, cost)
 ```
+
+## A* Search
+
+The heuristic function does not need to be precise it is enough it is a good
+guess such as *h(x,y) <= distance to goal from (x,y)* also, the heuristic can
+freely not taking into account the boundaries in the maze.
+
+The new computed property for the A* Search is *f = g + h(x,y)* where *g* is the
+distance of the current state from the initial state.
