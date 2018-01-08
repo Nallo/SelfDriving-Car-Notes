@@ -27,6 +27,8 @@ def search(grid,init,goal,cost):
     frontier = []
     visited = []
 
+    action = [[' ' for _ in range(cols)] for _ in range(rows)]
+    parent = [[-1 for _ in range(cols)] for _ in range(rows)]
     plan = [[-1 for _ in range(cols)] for _ in range(rows)]
     plan_count = 0
 
@@ -46,16 +48,26 @@ def search(grid,init,goal,cost):
             for i in range(len(delta)):
                 r2 = r + delta[i][0]
                 c2 = c + delta[i][1]
+                move = delta_name[i]
                 if r2 >= 0 and r2 < rows and \
                     c2 >= 0 and c2 < cols and \
                     grid[r2][c2] != 1 and [r2, c2] not in visited:
-                    print("Expanding to ({},{})".format(r2,c2))
+                    print("Expanding to ({},{})"
+                            " with action {}"
+                            " from ({},{})".format(r2,c2,move,r,c))
                     frontier.insert(0, [r2,c2])
+                    parent[r2][c2] = [r,c]
+                    action[r][c] = move
 
             if node == goal:
+                action[r][c] = '*'
                 break
 
     for row in plan: print row
+    print("")
+    for row in parent: print row
+    print("")
+    for row in action: print row
     return
 
 search(grid,init,goal,cost)
