@@ -114,3 +114,39 @@ freely not taking into account the boundaries in the maze.
 
 The new computed property for the A* Search is *f = g + h(x,y)* where *g* is the
 distance of the current state from the initial state.
+
+# Prediction
+
+Prediction process mixes two different approaches: *Model-Based* and *Data-Driven*.
+
+![model_vs_data_approach](/img/model_vs_data_approach.png)
+
+**Data Driven Approach** is typically Used for [trajectory clustering](http://video.udacity-data.com.s3.amazonaws.com/topher/2017/July/5978c2c6_trajectory-clustering/trajectory-clustering.pdf).
+
+  1. Offline training.
+    1. Define similarity
+    1. Unsupervised clustering
+    1. Define Prototype Trajectories
+  1. Online Prediction.
+    1. Observe Partial Trajectory
+    1. Compare to Prototype Trajectories
+    1. Generate Predictions
+
+![data_approach](/img/data_approach.png)
+
+**Model Driven Approach**
+
+  1. Identify common driving behaviors (change lane, turn left, cross street, ...).
+  1. Define the process model for each behaviors.
+  1. Update belief by comparing the observation with the output of the process
+     model.
+  1. Trajectory Generation.
+
+## Frenet Coordinate System
+
+With Frenet coordinates, we use the variables *s* and *d* to describe a vehicle's
+position on the road. The *s* coordinate represents distance along the road
+(also known as *longitudinal displacement*) and the *d* coordinate represents
+side-to-side position on the road (also known as *lateral displacement*).
+
+![frenet](img/frenet.png)
